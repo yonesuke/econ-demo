@@ -58,7 +58,7 @@ companies = st.sidebar.multiselect(
         'SoftBank'    
     ),
     placeholder='Select ...',
-    default=['Apple', Toyota']
+    default=['Apple', 'Toyota']
 )
 indexes = st.sidebar.multiselect(
     'Index',
@@ -106,7 +106,7 @@ elif freq == 'Monthly':
     df = _df.resample('M').last().fillna(method='ffill')
 # df.index = pd.to_datetime(df.index).date
 df.index.name = 'Date'
-df.columns.name = 'Company'
+df.columns.name = ''
 
 tab1, tab2, tab3 = st.tabs(['Close Price', 'Indexing the start date as 100', 'Log Return'])
 with tab1:
