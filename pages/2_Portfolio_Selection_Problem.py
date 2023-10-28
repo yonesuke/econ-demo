@@ -32,14 +32,57 @@ dict_symbol2ticker= {
     'Sony': '6758.T',
     'NTT': '9432.T',
     'Nomura': '8604.T',
-    'SoftBank': '9984.T'
+    'SoftBank': '9984.T',
+    'S&P 500': '^GSPC',
+    'Dow Jones': '^DJI',
+    'Nasdaq': '^IXIC',
+    'Nikkei 225': '^N225',
+    'Russell 2000': '^RUT',
+    'Hang Seng': '^HSI',
+    # topixは
+    'Bitcoin': 'BTC-USD',
+    'Ethereum': 'ETH-USD',
 }
-symbols = st.sidebar.multiselect(
+companies = st.sidebar.multiselect(
     'Company',
-    tuple(list(dict_symbol2ticker.keys())),
-    placeholder='Select ticker ...',
+    (
+        'Apple',
+        'Microsoft',
+        'Google',
+        'Amazon',
+        'Berkshire Hathaway',
+        'Toyota',
+        'Sony',
+        'NTT',
+        'Nomura',
+        'SoftBank'    
+    ),
+    placeholder='Select ...',
     default=['Apple', 'Microsoft']
 )
+indexes = st.sidebar.multiselect(
+    'Index',
+    (
+        'S&P 500',
+        'Dow Jones',
+        'Nasdaq',
+        'Nikkei 225',
+        'Russell 2000',
+        'Hang Seng'
+    ),
+    placeholder='Select ...',
+    default=['S&P 500', 'Nikkei 225']
+)
+cryptos = st.sidebar.multiselect(
+    'Crypto',
+    (
+        'Bitcoin',
+        'Ethereum'
+    ),
+    placeholder='Select ...'
+)
+
+symbols = companies + indexes + cryptos
 tickers = [dict_symbol2ticker[symbol] for symbol in symbols]
 
 start = st.sidebar.date_input('Start Date', dt.date(2016, 3, 1))
