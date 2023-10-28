@@ -58,7 +58,7 @@ companies = st.sidebar.multiselect(
         'SoftBank'    
     ),
     placeholder='Select ...',
-    default=['Apple', 'Microsoft']
+    default=['Apple', Toyota']
 )
 indexes = st.sidebar.multiselect(
     'Index',
