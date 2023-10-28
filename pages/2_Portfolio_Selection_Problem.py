@@ -89,7 +89,7 @@ st.download_button(
     mime="text/csv",
 )
 
-df_rtn = df.pct_change().dropna()
+df_rtn = df.pct_change().apply(np.log1p).dropna()
 ser_mean = df_rtn.mean().apply(lambda x: (1 + x)**multiplier - 1)
 ser_std = df_rtn.std().apply(lambda x: x * np.sqrt(multiplier))
 
