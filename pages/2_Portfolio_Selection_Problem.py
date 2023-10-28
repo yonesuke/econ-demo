@@ -64,7 +64,7 @@ elif freq == 'Monthly':
 # df.index = pd.to_datetime(df.index).date
 df.index.name = 'Date'
 
-tab1, tab2 = st.tabs(['Close Price', 'Indexing the start date as 100'])
+tab1, tab2, tab3 = st.tabs(['Close Price', 'Indexing the start date as 100', 'Log Return'])
 with tab1:
     fig = df.plot()
     # fig.set_ylabel('Close Price')
@@ -73,7 +73,10 @@ with tab2:
     fig = df.apply(lambda ser: ser / ser[0] * 100).plot()
     # fig.set_ylabel('Indexing the start date as 100')
     st.plotly_chart(fig)
-    
+with tab3:
+    fig = df.pct_change().apply(np.log1p).plot()
+    st.plotly_chart(fig)
+   
 @st.cache_data
 def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
