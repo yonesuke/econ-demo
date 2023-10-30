@@ -57,7 +57,9 @@ _df_prc = pd.DataFrame(
         companies[i]: get_prc(tickers[i], dt_start, dt_end) for i in range(len(companies))
     }
 )
-_ser_tpx = get_tpx(dt_start, dt_end)[_df_prc.index]
+_ser_tpx = get_tpx(dt_start, dt_end)
+idx_union = _df_prc.index.intersection(_ser_tpx.index)
+_df_prc, _ser_tpx = _df_prc[idx_union], _ser_tpx
 if freq == 'Daily':
     df_prc = _df_prc.fillna(method='ffill')
     ser_tpx = _ser_tpx.fillna(method='ffill')
