@@ -5,6 +5,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import datetime as dt
 import numpy as np
+from scipy.stats import linregress
 
 pd.options.plotting.backend = "plotly"
 
@@ -33,7 +34,7 @@ ticker_all = df_topix_companies.iloc[:, 2].values
 dict_company2ticker = dict(zip(company_all, ticker_all))
 
 # streamlit構成
-st.title('Market Beta')
+st.title('Market beta')
 # sidebar
 # 銘柄名入力欄
 companies = st.sidebar.multiselect('Companies', company_all, ['トヨタ自動車 (7203)', '野村ホールディングス (8604)'])
@@ -133,21 +134,23 @@ with tab3:
     )
     st.plotly_chart(fig)
 
-def calc_beta(company):
-    x, y = (ser_tpx.pct_change()*100).dropna().values, (df_prc[company].pct_change()*100).dropna().values
-    beta, _ = np.polyfit(x, y, 1)
-    return beta
+def calc_ols(company):
+    # return: alpha, beta, r^2
+    x, y = (ser_tpx.pct_change()*100).dropna().values - rate_free, (df_prc[company].pct_change()*100).dropna().values
+    res = linregress(x, y)
+    return res.intercept, res.slope, res.rvalue**2
 
 st.dataframe(
     pd.DataFrame(
-        index=['beta'],
-        data={company: calc_beta(company) for company in companies}
+        index=['Alpha', 'Beta', 'R squared'],
+        columns=companies,
+        data=np.array([calc_ols(company) for company in companies]).transpose()
     )
 )
 
 st.markdown(
 f"""
-## Market Return - Return Plot ({freq})
+## Return - Return Plot ({freq})
 """
 )
 
@@ -156,7 +159,7 @@ for i in range(len(companies)):
     company = companies[i]
     with tabs[i]:
         fig = go.Figure()
-        x, y = (ser_tpx.pct_change()*100).dropna().values, (df_prc[company].pct_change()*100).dropna().values
+        x, y = (ser_tpx.pct_change()*100).dropna().values - rate_free, (df_prc[company].pct_change()*100).dropna().values
         fig.add_trace(
                 go.Scatter(
                     x=x, y=y,
@@ -172,7 +175,7 @@ for i in range(len(companies)):
             )
         )
         fig.update_layout(
-            xaxis_title='Market Return [%]',
+            xaxis_title='Market Return - Risk Free Rate [%]',
             yaxis_title='Return [%]'
         )
         st.plotly_chart(fig)
