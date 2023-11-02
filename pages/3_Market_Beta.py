@@ -34,7 +34,7 @@ ticker_all = df_topix_companies.iloc[:, 2].values
 dict_company2ticker = dict(zip(company_all, ticker_all))
 
 # streamlit構成
-st.title('Market beta')
+st.title('Market Beta')
 # sidebar
 # 銘柄名入力欄
 companies = st.sidebar.multiselect('Companies', company_all, ['トヨタ自動車 (7203)', '野村ホールディングス (8604)'])
